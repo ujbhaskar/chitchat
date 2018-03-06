@@ -1,0 +1,158 @@
+/* You can add global styles to this file, and also import other style files */
+@import "https://use.fontawesome.com/releases/v5.0.7/css/all.css";
+
+@highlight-color: #44ff55;
+@theme-color : #3a3d3f;
+@default-color: #ffffff;
+
+html,body{
+    width: 100%;
+    height: 100%;
+    background: @theme-color;
+    color: @default-color;
+}
+
+
+.left{
+    float: left;
+}
+.right{
+    float: right;
+}
+.clear::after{
+    content: "";
+    display: block;
+    clear: both;
+}
+
+header::after{
+    content: "";
+    display: block;
+    margin-bottom: 60px;
+}
+
+.row{
+    margin: 0px;
+}
+
+
+/* -- responsive -- */
+@media (min-width: 992px) {
+    .pad-30{
+        padding: 30px;
+    }
+}
+
+@media (max-width: 991px) {
+    .visible-large{
+        display: none;
+    }
+    .mob-t-30{
+        padding-top: 30px;
+    }
+}
+
+.ng-invalid.ng-touched:not(form) {
+    border-right: 3px solid red;
+}
+.ng-valid:not(form){
+    border-right: 3px solid @highlight-color;
+}
+
+button[disabled]{
+    cursor: no-drop;
+}
+
+.required{
+    color: red;
+}
+
+.center{
+    text-align: center;
+}
+
+.circle{
+    border-radius: 50%;
+}
+
+.bold{
+    font-weight: bold;
+}
+
+.margin-b-20{
+    margin-bottom: 20px;
+}
+
+.border-b-black{
+    border-bottom: 1px solid #000000;
+}
+
+
+.relative{
+    position: relative;
+}
+.absolute{
+    position: absolute;
+}
+
+/*  styles for switch ui start */
+.switch-rail{
+    width: 30px;
+    height: 10px;
+    content: '';
+    display: inline-block;
+    border-radius: 5px;
+    background: lightgray;
+    
+    .wheel{
+        content: '';
+        display: inline-block;
+        border: 8px solid #9d9d9d;
+        border-radius: 50%;
+        top: -3px;
+    }
+}
+.on{
+    .switch-rail{
+        background: #aaffaa;
+        .wheel{
+            border: 8px solid #44aa55;
+            animation-name: makeOn;
+            animation-duration: 200ms;
+            box-shadow: -3px 0px 4px #000000;
+            left:15px;
+        }
+    }
+}
+.off{
+    .switch-rail{
+        .wheel{
+            animation-name: makeOff;
+            animation-duration: 200ms;
+            box-shadow: 3px 0px 4px #000000;
+        }
+    }
+}
+
+@keyframes makeOn {
+    from {
+        left:0px;
+        border: 8px solid #9d9d9d;
+    }
+    to {
+        left: 15px;
+        border: 8px solid #44aa55;
+    }
+}
+
+@keyframes makeOff {
+    from {
+        left: 15px;
+        border: 8px solid #44aa55;
+    }
+    to {
+        left:0px;
+        border: 8px solid #9d9d9d;
+    }
+}
+/*  styles for switch ui end */

@@ -1,0 +1,20 @@
+@highlight-color: #44ff55;
+.header-box{
+    border-bottom: 2px solid @highlight-color;
+    button{
+        &.navbar-toggler{
+            padding: 2px;
+            border: 0px;
+            border-radius: 50%;
+            outline-color: transparent;
+            &[aria-expanded="true"]{
+                border: 1px solid @highlight-color;
+            }
+        }
+    }
+}
+
+i.fa-user-circle{
+    font-size: 27px;
+    vertical-align: middle;
+}

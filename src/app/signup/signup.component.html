@@ -1,0 +1,54 @@
+<div class="container-fluid pad-30">
+  <div class="row">
+    <div *ngIf="success" class="alert alert-success alert-dismissible fade show col-md-12">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>User added successfully</strong> <a routerLink="/signin">Click here</a> for login!!
+    </div>    
+    <div *ngIf="error" class="alert alert-danger alert-dismissible fade show col-md-12">
+      <button type="button" class="close" data-dismiss="alert">&times;</button>
+      <strong>Sorry!!</strong> There occurred an error on adding User.<br/>{{errorMessage}}
+    </div>
+    <h2 class="col-md-12" ujjal>SIGN UP</h2>
+
+    <form #signUpForm="ngForm" class=" col-md-12">
+
+      <div class="form-group">
+        <label for="firstName">First Name <span class="required">*</span></label>
+        <input type="firstName" class="form-control col-md-6" id="firstName"
+          name="firstName"
+          placeholder="Enter First Name" 
+          [(ngModel)]="signup.firstName" 
+          required/>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name <span class="required">*</span></label>
+        <input type="lastName" class="form-control col-md-6" id="lastName"
+          name="lastName"
+          placeholder="Enter Last Name" 
+          [(ngModel)]="signup.lastName" 
+          required/>
+      </div>
+
+      <div class="form-group" >
+        <label for="email">Email <span class="required">*</span></label>
+        <input type="text" class="form-control col-md-6" id="email" 
+          placeholder="Enter email" 
+          [(ngModel)]="signup.email"
+          name="email" emailvalidator
+          required/>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Password <span class="required">*</span></label>
+        <input type="password" class="form-control col-md-6" id="password"
+          name="password"
+          placeholder="Enter Password" 
+          [(ngModel)]="signup.password" 
+          required/>
+      </div>
+      <hr/>
+      <button type="submit" class="btn btn-success col-md-6" (click)="onSubmit(signUpForm)" 
+        [disabled]="!signUpForm.form.valid">Submit</button>
+    </form>
+  </div>
+</div>

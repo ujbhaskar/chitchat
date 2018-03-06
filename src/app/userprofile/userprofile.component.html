@@ -1,0 +1,73 @@
+<div style="background: rgba(0,0,0,0.15); padding: 20px 0;" class="relative">
+  <div class="container-fluid pad-30">
+    <div class="row">
+      <div class="col-sm-3 center">
+        <i class="fas fa-user-circle border border-primary circle" style="font-size: 100px;"></i>
+      </div>
+      <div class="col-sm-9">
+        <h2>Username Title</h2>
+        <span>User Location</span>
+      </div>       
+    </div>
+  </div>
+  <div class="absolute edit-icon" (click)="toggleEdit()">    
+    <!--<i class="fas fa-pencil-alt"></i>-->
+    Edit
+    <span class="test" round-switch enabled="{{editmode}}"></span>
+  </div>
+</div>
+<div class="container-fluid pad-30 mob-t-30">
+  <form #editForm="ngForm" (ngSubmit)="onSubmit()" class="clear col-md-12">
+    <div class="row">
+      <div class="col-sm-12 margin-b-20 border-b-black">
+        <div class="col-sm-4 left label-style">
+          <label>First Name</label>
+        </div>
+        <div class="col-sm-8 bold left value-style">
+          <span *ngIf="!editmode">First Name</span>
+          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="First Name" required/>
+        </div>
+      </div>
+      <div class="col-sm-12 margin-b-20 border-b-black">
+        <div class="col-sm-4 left label-style">
+          <label>Last Name</label>
+        </div>
+        <div class="col-sm-8 bold left value-style">
+          <span *ngIf="!editmode">Last Name</span>
+          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="Last Name" required/>
+        </div>
+      </div>
+      <div class="col-sm-12 margin-b-20 border-b-black">
+        <div class="col-sm-4 left label-style">
+          <label>Email</label>
+        </div>
+        <div class="col-sm-8 bold left value-style">
+          <span *ngIf="!editmode">Email</span>
+          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="Email" required/>
+        </div>
+      </div>
+      <div class="col-sm-12 margin-b-20 border-b-black">
+        <div class="col-sm-4 left label-style">
+          <label>City</label>
+        </div>
+        <div class="col-sm-8 bold left value-style">
+          <span *ngIf="!editmode">City</span>
+          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="City" required/>
+        </div>
+      </div>
+      <div class="col-sm-12 margin-b-20 border-b-black">
+        <div class="col-sm-4 left label-style">
+          <label>Country</label>
+        </div>
+        <div class="col-sm-8 bold left value-style">
+          <span *ngIf="!editmode">Country</span>
+          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="Country" required/>
+        </div>
+      </div>
+      <br/>
+      <!--<div>User Profile Details</div>-->
+    </div>
+    <button *ngIf="editmode" type="submit" class=" right btn btn-success" (click)="onSubmit()" 
+        [disabled]="!editForm.form.valid">Submit</button>
+  </form>
+</div>
