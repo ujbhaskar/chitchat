@@ -1,6 +1,7 @@
 import { Component, OnInit, Directive,ElementRef,Renderer } from '@angular/core';
 import { NgModel,NgForm } from '@angular/forms';
 import { SignIn } from './signin.model';
+import { Router } from "@angular/router";
 import { AuthenticationService } from '../authentication.service';
 import { User } from "../models/user.model";
 
@@ -14,7 +15,7 @@ export class SigninComponent implements OnInit {
   error:Boolean = false;
   errorMessage:String = '';
 
-  constructor(private authService: AuthenticationService) { 
+  constructor(private authService: AuthenticationService, private router: Router) { 
   }
 
   ngOnInit() {
@@ -29,6 +30,7 @@ export class SigninComponent implements OnInit {
             data =>{             
               this.authService.loggedUser.emit(data.obj);
               console.log('self.authService.loggedUser: ', self.authService.loggedUser);
+              this.router.navigateByUrl('/live');
             },
             error =>{ 
               console.error(error.error);

@@ -1,0 +1,47 @@
+<div class="container-fluid pad-30 mob-t-30">
+  <div class="row">
+    <div class="col-md-4">
+      <form #searchUserForm="ngForm" class="" 
+        (ngSubmit)="onSubmit(searchUserForm.value)">
+        <div class="searchBox clear">
+          <input id="search" name="search" [(ngModel)]="search"
+            required minlength="3" #nameRef="ngModel" 
+            class="left inputElement" placeholder="Search user with minimum 3 characters!!"/>
+          <div class="left cross" (click)="clearSearch()">
+            <button type="button" class="close" *ngIf="search"
+             data-dismiss="alert">&times;</button>
+          </div>
+          <button type="submit" class="left buttonElement"
+           [disabled]="!searchUserForm.form.valid">
+            <i class="fas fa-search"></i>  
+          </button>
+        </div>
+      </form>
+      <div class="clear">
+        <div class="right" (click)="toggleOnline()">
+          Online
+          <span class="test" round-switch enabled="{{online}}"></span>
+        </div>
+      </div>
+      <div *ngIf="searchResults && searchResults.length">
+        <div *ngFor="let user of searchResults">
+          <div class="item-user">
+            <i class="fas fa-user-circle" [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}"></i>
+            <i class="vertical-seperator"></i>
+            {{user.firstName + ' ' + user.lastName}} 
+            <span class="right"><i class="fas fa-user-plus"></i></span>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="searchCompleted && searchResults && !searchResults.length">
+        <div class="alert alert-warning alert-dismissible">
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+          <strong>Sorry!</strong> There is no such matching User.
+        </div>
+      </div>
+    </div>
+    <div class="col-md-8">
+      this is the chat section
+    </div>
+  </div>
+</div>

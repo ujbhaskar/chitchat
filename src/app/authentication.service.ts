@@ -39,19 +39,19 @@ export class AuthenticationService {
   }
   
   getUser(){
-      const headers = new Headers({'Content-Type': 'application/json'});
-      return this.http.get(this.url+'user/loggedUser?token='+localStorage.getItem('token'), {headers: headers})
-          .map((response: Response) =>response.json())
-          .catch((error: Response) => {
-              // this.errorsService.handleError(error.json());
-              this.clearToken();
-              this.router.navigateByUrl('/signin');
-              return Observable.throw(error.json());
-          });
+      return this.http.get(this.url+'user/loggedUser?token='+localStorage.getItem('token'), {headers: this.headers})
+        .map((response: Response) =>response.json())
+        .catch((error: Response) => {
+            // this.errorsService.handleError(error.json());
+            this.clearToken();
+            console.log('over here in getUser');
+            this.router.navigateByUrl('/signin');
+            return Observable.throw(error.json());
+        });
   }
   
     clearToken() {
-        localStorage.clear();
+        localStorage.removeItem('token');
     }
 
     isLoggedIn() {
@@ -59,9 +59,30 @@ export class AuthenticationService {
     }
 
     signout(){
+        console.log('in signout');
         this.clearToken();
         this.loggedUser.emit(undefined);
         this.router.navigateByUrl('/signin');
+    }
+    checkValidLoggedIn(){
+        if(localStorage.getItem('token')){
+        let self = this;
+        this.getUser()
+            .subscribe(
+                data =>{             
+                this.loggedUser.emit(data.obj);
+                console.log('self.loggedUser: ', self.loggedUser);
+                // this.router.navigateByUrl('/live');
+                },
+                error =>{ 
+                console.error(error.error);
+                this.signout();
+                }
+            );
+        }
+        else{
+        this.signout();
+        }
     }
 
 }

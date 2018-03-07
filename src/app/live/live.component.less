@@ -1,0 +1,64 @@
+.common{
+    background: transparent;
+    border: 1px solid transparent;   
+    color: white; 
+    &:focus{
+        outline-color: transparent;
+    }
+}
+.searchBox{
+    background: rgba(0,0,0,0);
+    border-bottom: 1px solid #418932;
+    width:100%;
+    .inputElement{
+        .common;
+        width: ~'calc(100% - 50px)';
+    }
+    .cross{
+        .common;
+        width:20px;        
+        .close{
+            text-shadow: none;
+            color: #fff;
+            &:focus{
+                outline-color: transparent;
+            }
+        }
+    }
+    .buttonElement{
+        .common;
+        width: 30px;
+    }
+}
+
+.offline,.online{
+    border-radius: 50%;
+    border: 1px solid black;
+    position:relative;
+    &::after{
+        content:"";
+        display: inline-block;
+        position:absolute;
+        bottom: -4px;
+        right:-4px;
+        border-radius: 50%;
+    }
+}
+.offline{
+    &::after{
+        border:5px solid grey;
+    }
+}
+.online{
+    &::after{
+        border:5px solid green;
+    }
+}
+
+.item-user{
+    border-bottom:1px solid #2a2d2f;
+    padding: 10px 0;
+}
+.vertical-seperator{
+    margin: 0 5px;
+}
