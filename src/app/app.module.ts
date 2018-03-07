@@ -14,11 +14,14 @@ import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.compone
 import { TestDirective,EmailValidator,RoundSwitch } from './custom.directive';
 import { UserprofileComponent } from './userprofile/userprofile.component';
 import { AuthenticationService } from './authentication.service';
+import { LiveComponent } from './live/live.component';
+import { LiveChatService } from './live/live.chat.service';
 
 const appRoutes: Routes = [
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent },
   { path: 'userprofile', component: UserprofileComponent },
+  { path: 'live', component: LiveComponent },
   { path: 'forgotpassword', component: ForgotpasswordComponent },
   { path: '**', component: AppComponent }
 ];
@@ -34,7 +37,8 @@ const appRoutes: Routes = [
     TestDirective,
     EmailValidator,
     RoundSwitch,
-    UserprofileComponent
+    UserprofileComponent,
+    LiveComponent
   ],
   imports: [
     BrowserModule,
@@ -42,7 +46,7 @@ const appRoutes: Routes = [
     HttpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [AuthenticationService],
+  providers: [AuthenticationService,LiveChatService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

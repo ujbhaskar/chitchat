@@ -12,7 +12,8 @@ export class AppComponent implements OnInit{
   title = 'app';
   user: User;
   constructor(private router: Router, private authService: AuthenticationService) {
-    this.router.navigateByUrl('/signin');
+    console.log('over here');
+    this.authService.checkValidLoggedIn();
   }
 
   ngOnInit(){
