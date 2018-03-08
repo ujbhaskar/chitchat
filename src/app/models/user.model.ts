@@ -16,6 +16,7 @@ export class FullProfile{
     public email: String,
     public buddies: String,
     public city: String,
+    public state: String,
     public country: String,
     public isOnline: String
   ) {  }

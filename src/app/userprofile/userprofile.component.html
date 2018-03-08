@@ -1,11 +1,11 @@
-<div style="background: rgba(0,0,0,0.15); padding: 20px 0;" class="relative">
+<div style="background: rgba(0,0,0,0.15); padding: 20px 0;" class="relative" *ngIf="user">
   <div class="container-fluid pad-30">
     <div class="row">
       <div class="col-sm-3 center">
         <i class="fas fa-user-circle border border-primary circle" style="font-size: 100px;"></i>
       </div>
       <div class="col-sm-9">
-        <h2>Username Title</h2>
+        <h2>{{originalUser.firstName + " " + originalUser.lastName}}</h2>
         <span>User Location</span>
       </div>       
     </div>
@@ -16,7 +16,7 @@
     <span class="test" round-switch enabled="{{editmode}}"></span>
   </div>
 </div>
-<div class="container-fluid pad-30 mob-t-30">
+<div class="container-fluid pad-30 mob-t-30" *ngIf="user">
   <form #editForm="ngForm" (ngSubmit)="onSubmit()" class="clear col-md-12">
     <div class="row">
       <div class="col-sm-12 margin-b-20 border-b-black">
@@ -24,8 +24,9 @@
           <label>First Name</label>
         </div>
         <div class="col-sm-8 bold left value-style">
-          <span *ngIf="!editmode">First Name</span>
-          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="First Name" required/>
+          <span *ngIf="!editmode">{{user.firstName}}</span>
+          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="First Name"  
+            [(ngModel)]="user.firstName" minlength="3" name="firstName" #firstNameRef="ngModel" required />
         </div>
       </div>
       <div class="col-sm-12 margin-b-20 border-b-black">
@@ -33,8 +34,9 @@
           <label>Last Name</label>
         </div>
         <div class="col-sm-8 bold left value-style">
-          <span *ngIf="!editmode">Last Name</span>
-          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="Last Name" required/>
+          <span *ngIf="!editmode">{{user.lastName}}</span>
+          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="Last Name"  
+            [(ngModel)]="user.lastName" minlength="3" name="lastName" #lastNameRef="ngModel" required />
         </div>
       </div>
       <div class="col-sm-12 margin-b-20 border-b-black">
@@ -42,17 +44,9 @@
           <label>Email</label>
         </div>
         <div class="col-sm-8 bold left value-style">
-          <span *ngIf="!editmode">Email</span>
-          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="Email" required/>
-        </div>
-      </div>
-      <div class="col-sm-12 margin-b-20 border-b-black">
-        <div class="col-sm-4 left label-style">
-          <label>City</label>
-        </div>
-        <div class="col-sm-8 bold left value-style">
-          <span *ngIf="!editmode">City</span>
-          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="City" required/>
+          <span *ngIf="!editmode">{{user.email}}</span>
+          <input disabled class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="Email"  
+            [(ngModel)]="user.email" minlength="3" name="email" #emailRef="ngModel" required emailvalidator/>
         </div>
       </div>
       <div class="col-sm-12 margin-b-20 border-b-black">
@@ -60,8 +54,29 @@
           <label>Country</label>
         </div>
         <div class="col-sm-8 bold left value-style">
-          <span *ngIf="!editmode">Country</span>
-          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="Country" required/>
+          <span *ngIf="!editmode">{{user.country}}</span>
+          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="Country"  
+            [(ngModel)]="user.country" minlength="3" name="country" #countryRef="ngModel" />
+        </div>
+      </div>
+      <div class="col-sm-12 margin-b-20 border-b-black">
+        <div class="col-sm-4 left label-style">
+          <label>State</label>
+        </div>
+        <div class="col-sm-8 bold left value-style">
+          <span *ngIf="!editmode">{{user.state}}</span>
+          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="State"  
+            [(ngModel)]="user.state" minlength="3" name="state" #stateRef="ngModel" />
+        </div>
+      </div>
+      <div class="col-sm-12 margin-b-20 border-b-black">
+        <div class="col-sm-4 left label-style">
+          <label>City</label>
+        </div>
+        <div class="col-sm-8 bold left value-style">
+          <span *ngIf="!editmode">{{user.city}}</span>
+          <input class="form-control col-md-9" *ngIf="editmode" type="text" placeholder="City"  
+            [(ngModel)]="user.city" minlength="3" name="city" #cityRef="ngModel" />
         </div>
       </div>
       <br/>
