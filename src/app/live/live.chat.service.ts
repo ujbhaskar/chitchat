@@ -13,6 +13,32 @@ export class LiveChatService {
   constructor(private http: Http, private router: Router) {
 
   }
+  getBuddies(){
+      return this.http.get(this.url+'user/getBuddies?token='+localStorage.getItem('token'), {headers: this.headers})
+        .map((response: Response) =>response.json())
+        .catch((error: Response) => {
+            console.log('over here in searchUsers');
+            return Observable.throw(error.json());
+        });
+  }
+  addBuddy(email:String){
+      const body = JSON.stringify({buddy:email});
+      return this.http.post(this.url+'user/addBuddy?token='+localStorage.getItem('token'), body, {headers: this.headers})
+        .map((response: Response) =>response.json())
+        .catch((error: Response) => {
+            console.log('over here in searchUsers');
+            return Observable.throw(error.json());
+        });
+  }
+  deleteBuddy(email:String){
+      const body = JSON.stringify({buddy:email});
+      return this.http.post(this.url+'user/deleteBuddy?token='+localStorage.getItem('token'), body, {headers: this.headers})
+        .map((response: Response) =>response.json())
+        .catch((error: Response) => {
+            console.log('over here in searchUsers');
+            return Observable.throw(error.json());
+        });
+  }
 
   searchUser(keyword:String){
     let searchQuery:any = {};
