@@ -1,10 +1,10 @@
 export class Message {
     constructor(
-    	public message: string,
-    	public sender: string,
-    	public receiver: [string],
-    	public type: string,
-    	public date: string,
+    	public message: String,
+    	public sender: String,
+    	public receiver: [String],
+    	public type: String,
+    	public date: String,
     	public seen:Boolean
     	) {}
 }

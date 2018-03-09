@@ -13,6 +13,7 @@ import { Observable } from "rxjs";
 @Injectable()
 export class AuthenticationService {
   loggedUser = new EventEmitter<User>();
+  selfUser:User;
   url: any = 'http://localhost:3000/';
   headers:Headers = new Headers({'Content-Type': 'application/json'});
   constructor(private http: Http, private router: Router) {
@@ -83,8 +84,7 @@ updateUser(user:any){
             .subscribe(
                 data =>{             
                 this.loggedUser.emit(data.obj);
-                console.log('self.loggedUser: ', self.loggedUser);
-                // this.router.navigateByUrl('/live');
+                this.selfUser = data.obj;
                 },
                 error =>{ 
                 console.error(error.error);

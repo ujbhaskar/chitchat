@@ -16,7 +16,6 @@ export class UserprofileComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('in userprofile: ', this.auth.loggedUser);
     this.getUser();
   }
   toggleEdit(){

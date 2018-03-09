@@ -7,7 +7,6 @@ import { Observable } from "rxjs";
 
 @Injectable()
 export class LiveChatService {
-  loggedUser = new EventEmitter<User>();
   url: any = 'http://localhost:3000/';
   headers:Headers = new Headers({'Content-Type': 'application/json'});
   constructor(private http: Http, private router: Router) {
