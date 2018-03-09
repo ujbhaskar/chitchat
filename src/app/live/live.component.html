@@ -1,6 +1,6 @@
-<div class="container-fluid pad-30 mob-t-30">
+<div class="container-fluid pad-30 mob-t-30 main-box">
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-4" [hidden]="selectedUserToChat && isMobileDevice">
       <form #searchUserForm="ngForm" class="" 
         (ngSubmit)="onSubmit()">
         <div class="searchBox clear">
@@ -58,7 +58,7 @@
       </div>
     </div>
     <div class="col-md-8">
-      this is the chat section
+      <app-chatwindow (deSelect)="CancelChat()" [user]="selectedUserToChat"></app-chatwindow>
     </div>
   </div>
 </div>

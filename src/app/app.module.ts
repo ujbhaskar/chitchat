@@ -12,10 +12,13 @@ import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
 import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
 import { TestDirective,EmailValidator,RoundSwitch } from './custom.directive';
+import { EmojiPipe,LocalDatePipe } from './custom.pipe';
 import { UserprofileComponent } from './userprofile/userprofile.component';
 import { AuthenticationService } from './authentication.service';
 import { LiveComponent } from './live/live.component';
 import { LiveChatService } from './live/live.chat.service';
+import { ChatwindowComponent } from './chatwindow/chatwindow.component';
+import { MessageService } from './chatwindow/message.service';
 
 const appRoutes: Routes = [
   { path: 'signin', component: SigninComponent },
@@ -37,8 +40,11 @@ const appRoutes: Routes = [
     TestDirective,
     EmailValidator,
     RoundSwitch,
+    LocalDatePipe,
+    EmojiPipe,
     UserprofileComponent,
-    LiveComponent
+    LiveComponent,
+    ChatwindowComponent
   ],
   imports: [
     BrowserModule,
@@ -46,7 +52,11 @@ const appRoutes: Routes = [
     HttpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [AuthenticationService,LiveChatService],
+  providers: [
+    AuthenticationService,
+    LiveChatService,
+    MessageService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

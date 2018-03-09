@@ -28,9 +28,10 @@ export class UserprofileComponent implements OnInit {
   }
   getUser(){
     this.auth.getUser().subscribe(
-      data=>{        
+      data=>{
         this.user = Object.assign({},data.obj);
         this.originalUser = Object.assign({},data.obj);
+        this.editmode = false;
       },
       error=>{
         console.error(error);
@@ -43,6 +44,7 @@ export class UserprofileComponent implements OnInit {
     this.auth.updateUser(this.user).subscribe(
       data=>{
         console.log('updated data ********************** ' , data);
+        this.getUser();
       },
       error=>{
         console.error(error);

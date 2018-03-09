@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges,SimpleChanges } from '@angular/core';
+import { Component, OnInit, HostListener, OnChanges,SimpleChanges } from '@angular/core';
 import { NgModel,NgForm } from '@angular/forms';
 import { LiveChatService } from './live.chat.service';
 import { AuthenticationService } from '../authentication.service';
@@ -14,7 +14,9 @@ export class LiveComponent implements OnInit,OnChanges {
   searchCompleted:Boolean = false;
   online:Boolean = true;
   usersToChat:[any];
+  selectedUserToChat:any;
   emailsOfBuddies = [];
+  isMobileDevice:Boolean = document.body.clientWidth < 767;
   constructor(private auth: AuthenticationService, private liveChatService: LiveChatService) { 
     this.auth.checkValidLoggedIn();
   }
@@ -33,7 +35,7 @@ export class LiveComponent implements OnInit,OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges){
-    console.log(changes);
+    // console.log(changes);
   }
 
   getBuddies(){
@@ -41,7 +43,7 @@ export class LiveComponent implements OnInit,OnChanges {
     this.liveChatService.getBuddies()
     .subscribe(
       data=>{
-        console.log('buddies are : ' , data);
+        // console.log('buddies are : ' , data);
         this.usersToChat = data.obj;
         this.usersToChat.forEach(user=>{
           this.emailsOfBuddies.push(user.email);
@@ -57,7 +59,7 @@ export class LiveComponent implements OnInit,OnChanges {
     this.liveChatService.searchUser(this.search)
         .subscribe(
             data =>{             
-              console.log('got results : ' , data);
+              // console.log('got results : ' , data);
               this.searchResults = data.obj;
               this.searchCompleted = true;
             },
@@ -70,7 +72,7 @@ export class LiveComponent implements OnInit,OnChanges {
     this.search = '';
     this.searchCompleted = false;
     this.searchResults.length = 0;
-    console.log(this.searchResults);
+    // console.log(this.searchResults);
   }
 
   toggleOnline(){
@@ -79,7 +81,7 @@ export class LiveComponent implements OnInit,OnChanges {
   addBuddy(email:String){
     this.liveChatService.addBuddy(email).subscribe(
       data=>{
-        console.log('data: ' , data);
+        // console.log('data: ' , data);
         this.getBuddies();
       },
       error=>{
@@ -90,7 +92,7 @@ export class LiveComponent implements OnInit,OnChanges {
   banBuddy(email:String){    
     this.liveChatService.deleteBuddy(email).subscribe(
       data=>{
-        console.log('data: ' , data);
+        // console.log('data: ' , data);
         this.getBuddies();
       },
       error=>{
@@ -99,7 +101,16 @@ export class LiveComponent implements OnInit,OnChanges {
     )
   }
   selectUser(user:any){
-    console.log('user: ' , user);
+    // console.log('user: ' , user);
+    this.selectedUserToChat = user;
   }
-
+  CancelChat(){
+    //  console.log('In Deselect ');
+     this.selectedUserToChat = undefined;
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(event) {
+    this.isMobileDevice = document.body.clientWidth < 767;
+    // console.log(event.target.innerWidth);
+  }
 }

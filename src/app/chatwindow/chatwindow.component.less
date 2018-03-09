@@ -1,0 +1,51 @@
+.chat-header-block{
+    padding: 5px;
+    background: seagreen;
+}
+
+       
+.close{
+    text-shadow: none;
+    color: #fff;
+    margin-top: -3px;
+    &:focus{
+        outline-color: transparent;
+    }
+}
+
+.message-window{
+    background: darkgray;
+}
+
+@media (max-width: 767px) {
+    .clearMarginMedium{
+        margin: -6px -15px 0;
+    }
+}
+
+
+.action-window{
+    padding:3px;
+    border:1px solid black;
+    background: black;
+    .smileyElement{
+        font-size: 20px;
+        vertical-align: bottom;
+    }
+    .inputElement{
+        width: ~'calc(100% - 80px)';
+        height: 40px;
+        max-height: 300px;
+        font-size: 13px;
+        vertical-align: bottom;
+    }
+    .buttonElement{
+        width: 50px;
+        vertical-align: bottom;
+        background: #4a9a4a;
+        color: wheat;
+        border: 2px solid #4a7a4a;
+        border-radius: 0px 5px 5px 0;
+        font-weight: bold;
+    }
+}
