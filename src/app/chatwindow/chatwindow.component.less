@@ -14,7 +14,29 @@
 }
 
 .message-window{
-    background: #f3f3f3;
+    // background: #f3f3f3;
+    background-image: url('/asstes/grey-background.jpg');
+    color: #000;
+    .youTag,.meTag{
+		&:after{
+			clear:both;
+		}
+		padding:10px;
+		margin: 2px 20px;
+		border-radius:5px;
+		max-width:~'calc(80% - 20px)';
+	}
+	.youTag{
+		background-color:white;
+		float:left;
+	}
+	.meTag{
+		background-color:#cfd8dc;
+		float:right;
+		&>span{
+			float:right;
+		}
+	}
 }
 
 @media (max-width: 767px) {
@@ -49,3 +71,4 @@
         font-weight: bold;
     }
 }
+

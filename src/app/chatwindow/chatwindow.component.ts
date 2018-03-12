@@ -3,6 +3,7 @@ import { NgModel,NgForm } from '@angular/forms';
 import { Message } from '../models/message.model';
 import { User } from '../models/user.model';
 import { MessageService } from './message.service';
+import {socket} from "../provideSocket";
 import { AuthenticationService } from '../authentication.service';
 import { error } from 'selenium-webdriver';
 
@@ -16,18 +17,32 @@ export class ChatwindowComponent implements OnInit,OnChanges {
   @Output() deSelect: EventEmitter<any> = new EventEmitter<any>();
   msgHeight:String;
   message: String;
+  messageList:[Message];
+  localUser:User;
   currentMessage: Message;
   sendingMessage:Boolean = false;
   constructor(private msgService: MessageService, private authService: AuthenticationService) { }
 
   ngOnInit() {
     this.detectMsgHeight();
+    this.localUser = this.authService.selfUser;
+    console.log('this.localUser: ' , this.localUser);
+    console.log('this.user: ' , this.user);
+    try{
+      console.log('socket : ' , socket);
+    }
+    catch(e){
+      console.log(e);
+    }
   }
   ngOnChanges(changes:SimpleChanges){
     let keys = Object.keys(changes);
+    this.localUser = this.authService.selfUser;
     keys.forEach(change=>{
       if(change==='user'){
-        // console.log('Finally: ' , changes[change].currentValue);
+        console.log('Finally: ' , changes[change].currentValue);
+        console.log('Finally this.user: ' , this.user);
+        console.log('this.localUser: ' , this.localUser);
         this.getMessages();
       }
     });
@@ -62,7 +77,8 @@ export class ChatwindowComponent implements OnInit,OnChanges {
 				// 		$("div.chatbox-body").scrollTop($('div.chatbox-body').prop('scrollHeight'));
 				// 	},100);
         // });
-        console.log('messages retrieved : ' , data);
+        this.messageList = data.obj;
+        console.log('messages retrieved : ' , this.messageList);
       },
       error=>{
         console.error(error);
