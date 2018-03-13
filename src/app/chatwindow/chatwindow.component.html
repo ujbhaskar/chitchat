@@ -7,20 +7,24 @@
       <button type="button" class="close" data-dismiss="alert" (click)="Cancel()">&times;</button>
     </span>
   </div>
-  <div class="message-window" [style.height]="msgHeight">
-    <div class="row" *ngFor="let message of messageList" 
-    [ngClass]="{'youTag': (message.sender===user.email),'meTag': message.sender==localUser.email}">
-      <span class="chat-text" [innerHTML]="message.message | emoji"></span>
-      <br/>
-      <span>
-        <small class="grey" [innerHTML]="message.date | localdate"></small>
-        <small *ngIf="message.sender===localUser.email" [ngClass]="{'green':message.seen, 'grey':!message.seen}" class="glyphicon glyphicon-ok"></small>
-      </span>
+  <div #msgWindow class="message-window" [style.height]="msgHeight">
+    <div *ngIf="messageList">MessageList length = {{messageList.length}}</div>
+    <div class="clear" *ngFor="let message of messageList">
+      <div [ngClass]="{'youTag': (message.sender===user.email),'meTag': message.sender==localUser.email}">
+        <span class="chat-text" [innerHTML]="message.message | emoji"></span>
+        <br/>
+        <span>
+          <small class="grey" [innerHTML]="message.date | localdate"></small>
+          <small *ngIf="message.sender===localUser.email" 
+          [ngClass]="{'green':message.seen, 'grey':!message.seen}" 
+          class="glyphicon glyphicon-ok"></small>
+        </span>
+      </div>
     </div>
   </div>
   <div class="action-window">
     <form #messageForm="ngForm" class="" 
-        (ngSubmit)="onSubmit(messageForm.form.value)">
+        (ngSubmit)="onSubmit(messageForm)">
       <i class="fas fa-smile smileyElement"></i>
       <textarea class="inputElement" placeholder="Type a message!!" [(ngModel)]="message"
             required name="message" #messageRef="ngModel"></textarea>   
