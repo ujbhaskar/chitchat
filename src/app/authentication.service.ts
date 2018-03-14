@@ -49,19 +49,19 @@ export class AuthenticationService {
           this.router.navigateByUrl('/signin');
           return Observable.throw(error.json());
       });
-}
-updateUser(user:any){
-    const body = JSON.stringify(user);
-    return this.http.post(this.url+'user/updateUser?token='+localStorage.getItem('token'),body, {headers: this.headers})
-      .map((response: Response) =>response.json())
-      .catch((error: Response) => {
-          // this.errorsService.handleError(error.json());
-          this.clearToken();
-          console.log('over here in getUser');
-          this.router.navigateByUrl('/signin');
-          return Observable.throw(error.json());
-      });
-}
+    }
+    updateUser(user:any){
+        const body = JSON.stringify(user);
+        return this.http.post(this.url+'user/updateUser?token='+localStorage.getItem('token'),body, {headers: this.headers})
+        .map((response: Response) =>response.json())
+        .catch((error: Response) => {
+            // this.errorsService.handleError(error.json());
+            this.clearToken();
+            console.log('over here in getUser');
+            this.router.navigateByUrl('/signin');
+            return Observable.throw(error.json());
+        });
+    }
   
     clearToken() {
         localStorage.removeItem('token');
@@ -73,9 +73,15 @@ updateUser(user:any){
 
     signout(){
         console.log('in signout');
-        this.clearToken();
-        this.loggedUser.emit(undefined);
-        this.router.navigateByUrl('/signin');
+        return this.http.post(this.url+'user/logout?token='+localStorage.getItem('token'),{headers: this.headers})
+            .map((response: Response) => response.json())
+            .catch((error: Response) => {
+                this.clearToken();
+                console.log('over here in getUser');
+                this.router.navigateByUrl('/signin');
+                return Observable.throw(error.json());
+            });        
+        
     }
     checkValidLoggedIn(){
         if(localStorage.getItem('token')){

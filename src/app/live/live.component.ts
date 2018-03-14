@@ -1,7 +1,10 @@
-import { Component, OnInit, HostListener, OnChanges,SimpleChanges } from '@angular/core';
+import { Component, OnInit, HostListener, OnChanges,SimpleChanges,NgZone } from '@angular/core';
 import { NgModel,NgForm } from '@angular/forms';
 import { LiveChatService } from './live.chat.service';
+import { User } from '../models/user.model';
+import { socket } from "../provideSocket";
 import { AuthenticationService } from '../authentication.service';
+import { MessageService } from '../chatwindow/message.service';
 
 @Component({
   selector: 'app-live',
@@ -11,18 +14,47 @@ import { AuthenticationService } from '../authentication.service';
 export class LiveComponent implements OnInit,OnChanges {
   search:any = '';
   searchResults:any = [];
-  searchCompleted:Boolean = false;
+  searchCompleted:Boolean = false;  
+  localUser:User;
   online:Boolean = true;
   usersToChat:[any];
   selectedUserToChat:any;
   emailsOfBuddies = [];
   isMobileDevice:Boolean = document.body.clientWidth < 767;
-  constructor(private auth: AuthenticationService, private liveChatService: LiveChatService) { 
+  constructor(
+    private auth: AuthenticationService, 
+    private liveChatService: LiveChatService,
+    private messageService: MessageService,
+    private zone:NgZone
+  ) { 
     this.auth.checkValidLoggedIn();
   }
 
   ngOnInit() {
     this.getBuddies();
+    this.localUser = this.auth.selfUser;
+    // socket.on('ping'+user.email,function(email:string){
+    //   socket.emit('attendence' , email);
+    // });
+    var self = this;
+    socket.on('loggedUser', function(){
+      console.log('in loggedUser');
+        self.getBuddies();
+    });
+    socket.on('awayUser', function(){
+      console.log('in awayUser');
+        self.getBuddies();
+    });
+    
+    self.auth.loggedUser.subscribe((user:User)=>{
+      self.localUser = user;
+      console.log('in header user :', self.localUser);
+      self.trackCountMessages();
+    }); 
+    if(self.localUser){
+      self.trackCountMessages();
+    }
+
   }
 
   searchInitiate(){
@@ -34,20 +66,64 @@ export class LiveComponent implements OnInit,OnChanges {
     }
   }
 
+  trackCountMessages(){
+    var self = this;
+    if(!socket.hasListeners('hello:'+self.localUser.email)){
+      socket.on('hello:'+self.localUser.email, function(email){
+        console.log('on hello:'+self.localUser.email);
+        self.getUnseenCounts();
+        if(self.selectedUserToChat && self.selectedUserToChat.email === email){
+          console.log('in hello : ' , email);
+          socket.emit('messagesSeen',{sender: email,receiver:self.localUser.email});
+        }
+        if(!self.selectedUserToChat || (email !== self.selectedUserToChat.email)){
+          for(var i = 0;i<self.usersToChat.length;i++){
+            if(self.usersToChat[i].email===email){
+              self.zone.run(function(){
+                self.getUnseenCounts();
+              });
+              break;
+            }
+          }
+        }
+      });
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges){
     // console.log(changes);
   }
-
+  assignBuddies(buddies){    
+    var self = this;
+    self.zone.run(function(){
+      console.log('buddies are : ' , buddies);
+      self.usersToChat = buddies;
+      self.usersToChat.forEach(user=>{
+        self.emailsOfBuddies.push(user.email);
+        if(!socket.hasListeners('buddy-activity->'+user.email)){
+          socket.on('buddy-activity->'+user.email, function(){
+            console.log('in buddy-activity of : ' , user.email);
+              self.getBuddies();
+          });
+        }
+        // io.sockets.emit('messageSeen'+obj.sender+'->'+obj.receiver);
+        if(!socket.hasListeners('messageSeen'+user.email+'->'+self.localUser.email)){
+          self.trackCountMessages();
+        }
+      });
+    });
+  }
   getBuddies(){
-    this.emailsOfBuddies = [];
-    this.liveChatService.getBuddies()
+    var self = this;
+    self.emailsOfBuddies = [];
+    self.liveChatService.getBuddies()
     .subscribe(
       data=>{
-        // console.log('buddies are : ' , data);
-        this.usersToChat = data.obj;
-        this.usersToChat.forEach(user=>{
-          this.emailsOfBuddies.push(user.email);
-        });
+        self.assignBuddies(data.obj);        
+        self.getUnseenCounts();
+        setTimeout(function(){
+          console.log('after getting Unseen Counts self.usersToChat : ' ,self.usersToChat);
+        },6000);
       },
       error=>{
         console.error(error);
@@ -89,7 +165,10 @@ export class LiveComponent implements OnInit,OnChanges {
       }
     )
   }
-  banBuddy(email:String){    
+  banBuddy(email:String){
+    if(socket.hasListeners('buddy-activity->'+email)){
+      socket.removeEventListener('buddy-activity->'+email);
+    }
     this.liveChatService.deleteBuddy(email).subscribe(
       data=>{
         // console.log('data: ' , data);
@@ -102,12 +181,34 @@ export class LiveComponent implements OnInit,OnChanges {
   }
   selectUser(user:any){
     // console.log('user: ' , user);
-    this.selectedUserToChat = user;
+    this.selectedUserToChat = user;    
+    socket.emit('messagesSeen',{sender:user.email,receiver:this.localUser.email});
   }
   CancelChat(){
     //  console.log('In Deselect ');
      this.selectedUserToChat = undefined;
   }
+  
+  getUnseenCounts(){
+    var self = this;
+    if(self.usersToChat.length){
+      for(var i = 0;i<self.usersToChat.length;i++){
+          (function(user,index){ 
+          self.messageService.getUnseenCounts(user.email).subscribe(
+          (data) => {
+            console.log('here user is : ' , user);
+            console.log('data count is : ' , data.obj.count);
+            
+            self.zone.run(function(){
+              user.ping = data.obj.count;
+            });
+          });
+          })(self.usersToChat[i],i);
+        // break;
+      }
+    }
+  }
+  
   @HostListener('window:resize', ['$event'])
   onResize(event) {
     this.isMobileDevice = document.body.clientWidth < 767;

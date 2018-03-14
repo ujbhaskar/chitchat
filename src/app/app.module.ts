@@ -12,7 +12,7 @@ import { SigninComponent } from './signin/signin.component';
 import { SignupComponent } from './signup/signup.component';
 import { ForgotpasswordComponent } from './forgotpassword/forgotpassword.component';
 import { TestDirective,EmailValidator,RoundSwitch } from './custom.directive';
-import { EmojiPipe,LocalDatePipe } from './custom.pipe';
+import { EmojiPipe, LocalDatePipe, LocalTimePipe } from './custom.pipe';
 import { UserprofileComponent } from './userprofile/userprofile.component';
 import { AuthenticationService } from './authentication.service';
 import { LiveComponent } from './live/live.component';
@@ -42,6 +42,7 @@ const appRoutes: Routes = [
     RoundSwitch,
     LocalDatePipe,
     EmojiPipe,
+    LocalTimePipe,
     UserprofileComponent,
     LiveComponent,
     ChatwindowComponent

@@ -33,6 +33,8 @@
               {{user.firstName + ' ' + user.lastName}}
             </span>
             <span class="right">
+              <span *ngIf="user.ping" class="ping">{{user.ping}}</span>
+              <i class="vertical-seperator"></i>
               <i class="far fa-comment" (click)="selectUser(user)"></i>
               <i class="vertical-seperator"></i>
               <i class="fas fa-ban" (click)="banBuddy(user.email)"></i>

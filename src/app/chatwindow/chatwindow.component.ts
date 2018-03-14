@@ -68,8 +68,13 @@ export class ChatwindowComponent implements OnInit,OnChanges {
             console.log('inside receiver of : ' + 'messageSaved'+self.user.email+'->'+self.localUser.email);
             self.getMessages();
           });
+          
+          socket.on('readMessage'+self.user.email,function(){
+            console.log('inside readMessage of : ' + 'readMessage'+self.user.email);
+            self.getMessages();
+          })
         });
-
+        self.messageBoxActive();
       }
     });
   }
@@ -89,6 +94,15 @@ export class ChatwindowComponent implements OnInit,OnChanges {
       this.msgHeight = (docHeight - 141)+'px';
     }
   }
+  compareDate(d1, d2){
+    // console.log('in compareDate where d1: ' + d1 + ' and d2 = ' + d2);
+    return (new Date(d1).getDate() + '-' + new Date(d1).getMonth() + '-' + new Date(d1).getFullYear() === new Date(d2).getDate() + '-' + new Date(d2).getMonth() + '-' + new Date(d2).getFullYear())
+  }
+	messageBoxActive(){
+    console.log('inside messageBoxActive: ');
+		socket.emit('messagesSeen',{sender: this.user.email,receiver:this.localUser.email});	
+    console.log('last of  messageBoxActive: ');
+	}
   getMessages(){
     var self = this;
 		if(!self.user)

@@ -2,6 +2,7 @@ import { Component,OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { AuthenticationService } from "./authentication.service";
 import { User } from "./models/user.model";
+import {socket} from "./provideSocket";
 
 @Component({
   selector: 'app-root',
@@ -17,10 +18,18 @@ export class AppComponent implements OnInit{
   }
 
   ngOnInit(){
-    this.authService.loggedUser.subscribe((user:User)=>{
-      this.user = user;
-      console.log('user :', this.user);
+    var self = this;
+    self.authService.loggedUser.subscribe((user:User)=>{
+      self.user = user;
+      if(self.user){
+        console.log('user :', self.user);
+        socket.on('ping'+self.user.email,function(email:string){
+          console.log('in ping where user is : ' , self.user.email);
+          socket.emit('attendence' , email);
+        });
+      }
     });
+    
   }
   
 }

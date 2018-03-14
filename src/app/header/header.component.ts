@@ -1,5 +1,6 @@
 import { Component, OnInit,ViewChild,ElementRef } from '@angular/core';
 import { AuthenticationService } from "../authentication.service";
+import { Router } from "@angular/router";
 import { User } from "../models/user.model";
 
 @Component({
@@ -11,7 +12,8 @@ export class HeaderComponent implements OnInit {
   @ViewChild('btnMob') btnMob: ElementRef;
   user: User;
   online:Boolean = true;
-  constructor(private authService: AuthenticationService) { }
+  
+  constructor(private authService: AuthenticationService,private router: Router) { }
 
   ngOnInit() {
     this.authService.loggedUser.subscribe((user:User)=>{
@@ -21,7 +23,17 @@ export class HeaderComponent implements OnInit {
   }
 
   signout(){
-    this.authService.signout();
+    var self = this;
+    self.authService.signout().subscribe(
+      data=>{
+        self.authService.clearToken();
+        console.log('after logout ');
+        self.router.navigateByUrl('/signin');
+        self.authService.loggedUser.emit(undefined);
+        
+      }
+    )
+
   }
   closeMobileMenu(){
     if(document.body.clientWidth < 992){
