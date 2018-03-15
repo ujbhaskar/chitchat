@@ -72,7 +72,6 @@ export class AuthenticationService {
     }
 
     signout(){
-        console.log('in signout');
         return this.http.post(this.url+'user/logout?token='+localStorage.getItem('token'),{headers: this.headers})
             .map((response: Response) => response.json())
             .catch((error: Response) => {
@@ -84,22 +83,24 @@ export class AuthenticationService {
         
     }
     checkValidLoggedIn(){
+        console.log('in checkValidLoggedIn');
         if(localStorage.getItem('token')){
-        let self = this;
-        this.getUser()
-            .subscribe(
-                data =>{             
-                this.loggedUser.emit(data.obj);
-                this.selfUser = data.obj;
-                },
-                error =>{ 
-                console.error(error.error);
-                this.signout();
-                }
-            );
+            let self = this;
+            self.getUser()
+                .subscribe(
+                    data =>{             
+                    self.loggedUser.emit(data.obj);
+                    self.selfUser = data.obj;
+                    },
+                    error =>{ 
+                    console.error(error.error);
+                    self.signout();
+                    }
+                );
         }
         else{
-        this.signout();
+            this.signout();
+            this.router.navigateByUrl('/signin');
         }
     }
 

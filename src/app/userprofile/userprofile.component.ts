@@ -12,7 +12,7 @@ export class UserprofileComponent implements OnInit {
   user:any;
   originalUser:any;
   constructor(private auth: AuthenticationService) {
-    this.auth.checkValidLoggedIn();
+    // this.auth.checkValidLoggedIn();
   }
 
   ngOnInit() {

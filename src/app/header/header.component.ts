@@ -18,7 +18,6 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.authService.loggedUser.subscribe((user:User)=>{
       this.user = user;
-      console.log('in header user :', this.user);
     });
   }
 
@@ -27,7 +26,6 @@ export class HeaderComponent implements OnInit {
     self.authService.signout().subscribe(
       data=>{
         self.authService.clearToken();
-        console.log('after logout ');
         self.router.navigateByUrl('/signin');
         self.authService.loggedUser.emit(undefined);
         
@@ -37,9 +35,7 @@ export class HeaderComponent implements OnInit {
   }
   closeMobileMenu(){
     if(document.body.clientWidth < 992){
-      console.log('in closeMobileMenu');
       let el: HTMLElement = this.btnMob.nativeElement as HTMLElement;
-      console.log(document.body.clientWidth);
       el.click();
     }
   }

@@ -25,6 +25,7 @@
 		margin: 2px 20px;
 		border-radius:5px;
 		max-width:~'calc(80% - 20px)';
+        word-break: break-all;
 	}
 	.youTag{
 		background-color:white;
@@ -87,4 +88,49 @@ small{
     margin: 3px 25%;
     border-radius: 10px;
     color: white;
+}
+
+.typing{
+    font-size:11px;
+    position: relative;
+}
+
+@keyframes firstDot {
+    0%   {opacity: 0}
+    25%  {opacity: 1}
+    100% {opacity: 1}
+}
+@keyframes secondDot {
+    0%   {opacity: 0}
+    25%  {opacity: 0}
+    50%  {opacity: 1}
+    100% {opacity: 1}
+}
+@keyframes thirdDot {
+    0%   {opacity: 0}
+    25%  {opacity: 0}
+    50%  {opacity: 0}
+    75%  {opacity: 1}
+    100% {opacity: 1}
+}
+
+.jump{
+    position: absolute;
+    animation-duration: 2s;
+    // display: none;
+    margin-top: 6px;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
+    &.first{
+        animation-name: firstDot;
+        right: -4px;
+    }
+    &.second{
+        animation-name: secondDot;
+        right: -8px;
+    }
+    &.third{
+        animation-name: thirdDot;
+        right: -12px;
+    }
 }

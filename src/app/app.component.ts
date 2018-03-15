@@ -13,7 +13,7 @@ export class AppComponent implements OnInit{
   title = 'app';
   user: User;
   constructor(private router: Router, private authService: AuthenticationService) {
-    console.log('over here');
+    // console.log('over here');
     this.authService.checkValidLoggedIn();
   }
 
@@ -24,7 +24,7 @@ export class AppComponent implements OnInit{
       if(self.user){
         console.log('user :', self.user);
         socket.on('ping'+self.user.email,function(email:string){
-          console.log('in ping where user is : ' , self.user.email);
+          console.log('Present Sir : ' , self.user.email);
           socket.emit('attendence' , email);
         });
       }

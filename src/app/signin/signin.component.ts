@@ -19,7 +19,6 @@ export class SigninComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log('in ngOnInit'); 
     this.fetchLoggedUser();
   }
   fetchLoggedUser(){
@@ -27,9 +26,9 @@ export class SigninComponent implements OnInit {
       let self = this;
       this.authService.getUser()
         .subscribe(
-            data =>{             
+            data =>{
+              this.authService.selfUser = data.obj;
               this.authService.loggedUser.emit(data.obj);
-              console.log('self.authService.loggedUser: ', self.authService.loggedUser);
               this.router.navigateByUrl('/live');
             },
             error =>{ 
@@ -40,8 +39,6 @@ export class SigninComponent implements OnInit {
     }
   }
   onSubmit(signinForm: NgForm){
-    console.log('in check');
-    console.log(this.auth);
     this.error = false;
     this.errorMessage = '';
     var self = this;
@@ -50,7 +47,6 @@ export class SigninComponent implements OnInit {
         .subscribe(
             data =>{
               signinForm.reset();
-              console.log('data: ', data);
               localStorage.setItem('token',data.token);
               this.fetchLoggedUser();
             },

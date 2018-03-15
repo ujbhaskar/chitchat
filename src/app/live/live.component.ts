@@ -27,33 +27,38 @@ export class LiveComponent implements OnInit,OnChanges {
     private messageService: MessageService,
     private zone:NgZone
   ) { 
-    this.auth.checkValidLoggedIn();
+    // this.auth.checkValidLoggedIn();
   }
 
   ngOnInit() {
-    this.getBuddies();
-    this.localUser = this.auth.selfUser;
+    // console.log('--------------');
+    var self = this;
+    self.localUser = self.auth.selfUser;
+    // console.log('localUser : ' , self.localUser);
+    if(self.localUser){
+      self.getBuddies();
+      self.trackCountMessages();
+    }
+    else{
+      self.auth.loggedUser.subscribe((user:User)=>{
+        self.localUser = user;
+        // console.log('in ngOnint where user :', self.localUser);
+        self.getBuddies();
+        self.trackCountMessages();
+      });
+    }
     // socket.on('ping'+user.email,function(email:string){
     //   socket.emit('attendence' , email);
     // });
-    var self = this;
-    socket.on('loggedUser', function(){
-      console.log('in loggedUser');
-        self.getBuddies();
-    });
-    socket.on('awayUser', function(){
-      console.log('in awayUser');
-        self.getBuddies();
-    });
+    // socket.on('loggedUser', function(){
+    //   console.log('in loggedUser');
+    //     self.getBuddies();
+    // });
+    // socket.on('awayUser', function(){
+    //   console.log('in awayUser');
+    //     self.getBuddies();
+    // });
     
-    self.auth.loggedUser.subscribe((user:User)=>{
-      self.localUser = user;
-      console.log('in header user :', self.localUser);
-      self.trackCountMessages();
-    }); 
-    if(self.localUser){
-      self.trackCountMessages();
-    }
 
   }
 
@@ -70,17 +75,19 @@ export class LiveComponent implements OnInit,OnChanges {
     var self = this;
     if(!socket.hasListeners('hello:'+self.localUser.email)){
       socket.on('hello:'+self.localUser.email, function(email){
-        console.log('on hello:'+self.localUser.email);
-        self.getUnseenCounts();
+        // console.log('who is pinging: ' , email);
+        // console.log('on hello:'+self.localUser.email);
+        // self.getUnseenCounts();
         if(self.selectedUserToChat && self.selectedUserToChat.email === email){
-          console.log('in hello : ' , email);
+          // console.log('in hello : ' , email);
           socket.emit('messagesSeen',{sender: email,receiver:self.localUser.email});
         }
         if(!self.selectedUserToChat || (email !== self.selectedUserToChat.email)){
           for(var i = 0;i<self.usersToChat.length;i++){
             if(self.usersToChat[i].email===email){
               self.zone.run(function(){
-                self.getUnseenCounts();
+                // console.log('----www3333-----');
+                self.getUnseenCounts(email);
               });
               break;
             }
@@ -96,13 +103,13 @@ export class LiveComponent implements OnInit,OnChanges {
   assignBuddies(buddies){    
     var self = this;
     self.zone.run(function(){
-      console.log('buddies are : ' , buddies);
+      // console.log('buddies are : ' , buddies);
       self.usersToChat = buddies;
       self.usersToChat.forEach(user=>{
         self.emailsOfBuddies.push(user.email);
         if(!socket.hasListeners('buddy-activity->'+user.email)){
           socket.on('buddy-activity->'+user.email, function(){
-            console.log('in buddy-activity of : ' , user.email);
+            // console.log('in buddy-activity of : ' , user.email);
               self.getBuddies();
           });
         }
@@ -120,9 +127,9 @@ export class LiveComponent implements OnInit,OnChanges {
     .subscribe(
       data=>{
         self.assignBuddies(data.obj);        
-        self.getUnseenCounts();
+        self.getUnseenCounts(undefined);
         setTimeout(function(){
-          console.log('after getting Unseen Counts self.usersToChat : ' ,self.usersToChat);
+          // console.log('after getting Unseen Counts self.usersToChat : ' ,self.usersToChat);
         },6000);
       },
       error=>{
@@ -183,27 +190,31 @@ export class LiveComponent implements OnInit,OnChanges {
     // console.log('user: ' , user);
     this.selectedUserToChat = user;    
     socket.emit('messagesSeen',{sender:user.email,receiver:this.localUser.email});
+    user.ping = 0;
   }
   CancelChat(){
     //  console.log('In Deselect ');
      this.selectedUserToChat = undefined;
   }
   
-  getUnseenCounts(){
+  getUnseenCounts(email){
+    // console.log('getUnseenCounts for email: ' , email);
     var self = this;
-    if(self.usersToChat.length){
+    if(self.usersToChat.length){      
       for(var i = 0;i<self.usersToChat.length;i++){
-          (function(user,index){ 
-          self.messageService.getUnseenCounts(user.email).subscribe(
-          (data) => {
-            console.log('here user is : ' , user);
-            console.log('data count is : ' , data.obj.count);
-            
-            self.zone.run(function(){
-              user.ping = data.obj.count;
+        if(self.usersToChat[i].email === email || email==undefined){
+            (function(user,index){ 
+            self.messageService.getUnseenCounts(user.email).subscribe(
+            (data) => {
+              // console.log('here user is : ' , user);
+              // console.log('data count is : ' , data.obj.count);
+              
+              self.zone.run(function(){
+                user.ping = data.obj.count;
+              });
             });
-          });
-          })(self.usersToChat[i],i);
+            })(self.usersToChat[i],i);
+        }
         // break;
       }
     }

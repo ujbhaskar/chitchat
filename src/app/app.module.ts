@@ -26,7 +26,7 @@ const appRoutes: Routes = [
   { path: 'userprofile', component: UserprofileComponent },
   { path: 'live', component: LiveComponent },
   { path: 'forgotpassword', component: ForgotpasswordComponent },
-  { path: '**', component: AppComponent }
+  { path: '**', component: SigninComponent }
 ];
 
 @NgModule({

@@ -21,9 +21,11 @@ export class ChatwindowComponent implements OnInit,OnChanges {
   msgHeight:String;
   message: String;
   messageList:[Message];
+  userIsTyping:Boolean = false;
   localUser:User;
   currentMessage: Message;
   sendingMessage:Boolean = false;
+  typingTime:any;
   constructor(
     private msgService: MessageService, 
     private authService: AuthenticationService,
@@ -33,13 +35,9 @@ export class ChatwindowComponent implements OnInit,OnChanges {
   ngOnInit() {
     this.detectMsgHeight();
     this.localUser = this.authService.selfUser;
-    console.log('this.localUser: ' , this.localUser);
-    console.log('this.user: ' , this.user);
     try{
-      console.log('socket : ' , socket);
     }
     catch(e){
-      console.log(e);
     }
   }
   ngOnChanges(changes:SimpleChanges){
@@ -48,41 +46,61 @@ export class ChatwindowComponent implements OnInit,OnChanges {
     self.localUser = self.authService.selfUser;
     keys.forEach(change=>{
       if(change==='user' && changes[change].currentValue){
-        console.log('changes are: ',changes);
-        console.log('changes currentValue : ', changes[change].currentValue);
-        console.log('Finally: ' , changes[change].currentValue);
-        console.log('Finally self.user: ' , self.user);
-        console.log('self.localUser: ' , self.localUser);
         self.getMessages();
         
-        console.log('messageSaved'+self.localUser.email+'->'+self.user.email);
-        console.log('messageSaved'+self.user.email+'->'+self.localUser.email);
-        
         self.zone.run(function(){
-          console.log('in self zone run');
-          socket.on('messageSaved'+self.localUser.email+'->'+self.user.email, function(){
-            console.log('inside receiver of : ' + 'messageSaved'+self.localUser.email+'->'+self.user.email);
-            self.getMessages();
-          });
-          socket.on('messageSaved'+self.user.email+'->'+self.localUser.email, function(){
-            console.log('inside receiver of : ' + 'messageSaved'+self.user.email+'->'+self.localUser.email);
-            self.getMessages();
-          });
+          if(!socket.hasListeners('messageSaved'+self.localUser.email+'->'+self.user.email)){
+            socket.on('messageSaved'+self.localUser.email+'->'+self.user.email, function(){
+              self.getMessages();
+            });
+          }
+          if(!socket.hasListeners('messageSaved'+self.user.email+'->'+self.localUser.email)){
+            socket.on('messageSaved'+self.user.email+'->'+self.localUser.email, function(){
+              self.getMessages();
+            });
+          }
+          if(!socket.hasListeners('readMessage'+self.user.email)){
+            socket.on('readMessage'+self.user.email,function(){
+              self.getMessages();
+            })
+          }
           
-          socket.on('readMessage'+self.user.email,function(){
-            console.log('inside readMessage of : ' + 'readMessage'+self.user.email);
-            self.getMessages();
-          })
+          if(!socket.hasListeners('typing:'+self.user.email+'>'+self.localUser.email)){
+            socket.on('typing:'+self.user.email+'>'+self.localUser.email,function(){
+              self.zone.run(function(){                
+                self.userIsTyping = true;
+              });
+              clearTimeout(self.typingTime);
+              self.typingTime = setTimeout(function(){
+                self.zone.run(function(){
+                  self.userIsTyping = false;
+                });
+              },2000);
+            })
+          }
+
         });
         self.messageBoxActive();
       }
     });
   }
   Cancel(){
+    var self = this;
+    if(socket.hasListeners('messageSaved'+self.localUser.email+'->'+self.user.email)){
+      socket.removeListener('messageSaved'+self.localUser.email+'->'+self.user.email);
+    }
+    if(socket.hasListeners('messageSaved'+self.user.email+'->'+self.localUser.email)){
+      socket.removeListener('messageSaved'+self.user.email+'->'+self.localUser.email);
+    }
+    if(socket.hasListeners('readMessage'+self.user.email)){
+      socket.removeListener('readMessage'+self.user.email);
+    }
+    if(socket.hasListeners('typing:'+self.user.email+'>'+self.localUser.email)){
+      socket.removeListener('typing:'+self.user.email+'>'+self.localUser.email);
+    }
     this.deSelect.emit('close');
   }
   detectMsgHeight(){
-    console.log('inside detectMsgHeight');
     var docHeight = document.body.clientHeight;
     if(document.body.clientWidth>=992){
       this.msgHeight = (docHeight - 180)+'px';
@@ -95,13 +113,10 @@ export class ChatwindowComponent implements OnInit,OnChanges {
     }
   }
   compareDate(d1, d2){
-    // console.log('in compareDate where d1: ' + d1 + ' and d2 = ' + d2);
     return (new Date(d1).getDate() + '-' + new Date(d1).getMonth() + '-' + new Date(d1).getFullYear() === new Date(d2).getDate() + '-' + new Date(d2).getMonth() + '-' + new Date(d2).getFullYear())
   }
 	messageBoxActive(){
-    console.log('inside messageBoxActive: ');
 		socket.emit('messagesSeen',{sender: this.user.email,receiver:this.localUser.email});	
-    console.log('last of  messageBoxActive: ');
 	}
   getMessages(){
     var self = this;
@@ -111,7 +126,6 @@ export class ChatwindowComponent implements OnInit,OnChanges {
 			(data)=>{
         self.zone.run(function(){
           self.messageList = data.obj;
-          console.log('messages retrieved : ' , self.messageList);
           setTimeout(function(){
             self.msgWindowRef.nativeElement.scrollTop = self.msgWindowRef.nativeElement.scrollHeight;
           },100);
@@ -123,7 +137,6 @@ export class ChatwindowComponent implements OnInit,OnChanges {
 		);
   }
   onSubmit(form:NgForm){
-    console.log('form: ' , form);
     this.currentMessage = {
 			message: form.form.value.message,
 			sender: this.authService.selfUser.email,
@@ -135,7 +148,6 @@ export class ChatwindowComponent implements OnInit,OnChanges {
 		this.sendingMessage = true;
 		this.msgService.saveMessage(this.currentMessage).subscribe(
           (data) => {
-          	console.log('message send success : ' , data);
             form.reset();
             this.sendingMessage = false;
           },
@@ -143,6 +155,9 @@ export class ChatwindowComponent implements OnInit,OnChanges {
             console.error(error);
           }
 		);
+  }
+  userTyping(){
+    socket.emit('typing',{sender:this.localUser.email,receiver:this.user.email});
   }
   @HostListener('window:resize', ['$event'])
   onResize(event) {

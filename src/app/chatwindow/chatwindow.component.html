@@ -3,6 +3,12 @@
     <i class="fas fa-user-circle"></i>
     <i class="vertical-seperator"></i>
     <span>{{user.firstName + ' ' + user.lastName}}</span>
+    <i class="vertical-seperator"></i>
+    <i *ngIf="userIsTyping" class="typing">Typing
+      <span class="jump first">.</span>
+      <span class="jump second">.</span>
+      <span class="jump third">.</span>
+    </i>
     <span class="right">
       <button type="button" class="close" data-dismiss="alert" (click)="Cancel()">&times;</button>
     </span>
@@ -30,7 +36,7 @@
     <form #messageForm="ngForm" class="" 
         (ngSubmit)="onSubmit(messageForm)">
       <i class="fas fa-smile smileyElement"></i>
-      <textarea class="inputElement" placeholder="Type a message!!" [(ngModel)]="message"
+      <textarea class="inputElement" (keypress)=userTyping() placeholder="Type a message!!" [(ngModel)]="message"
             required name="message" #messageRef="ngModel"></textarea>   
       <button type="submit" class="buttonElement"
         [disabled]="!messageForm.form.valid">

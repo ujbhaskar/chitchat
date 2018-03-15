@@ -78,7 +78,6 @@ export class RoundSwitch implements OnChanges{
 export class EmailValidator implements Validator {  
     validator: ValidatorFn;  
     constructor() {  
-        console.log('in EmailValidator constructor');
         this.validator = this.emailValidator();  
     }  
     validate(c: FormControl) {  
