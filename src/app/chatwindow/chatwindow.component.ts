@@ -23,6 +23,7 @@ export class ChatwindowComponent implements OnInit,OnChanges {
   messageList:[Message];
   userIsTyping:Boolean = false;
   localUser:User;
+  loadingChat:Boolean = true;
   currentMessage: Message;
   sendingMessage:Boolean = false;
   typingTime:any;
@@ -129,6 +130,7 @@ export class ChatwindowComponent implements OnInit,OnChanges {
           setTimeout(function(){
             self.msgWindowRef.nativeElement.scrollTop = self.msgWindowRef.nativeElement.scrollHeight;
           },100);
+          self.loadingChat = false;
         });
       },
       error=>{

@@ -3,7 +3,38 @@
     <div class="container-fluid pad-30">
       <div class="row">
         <div class="col-sm-3 center">
-          <i class="fas fa-user-circle border border-primary circle" style="font-size: 100px;"></i>
+          <i *ngIf="!originalUser.profilePicImage" style="font-size: 100px;"
+          class="fas fa-user-circle border border-primary circle mb-3"></i>
+          <img *ngIf="originalUser.profilePicImage" 
+            src="http://localhost:3000/user/image/{{originalUser.profilePicImage}}" 
+            class="user-img border border-primary circle mb-3"/>
+          <br/>
+          <div *ngIf="editmode">
+            <label class="custom-file-upload">
+                <input name="fileUpload" id="fileUpload" type="file" 
+                  ng2FileSelect [uploader]="uploader"/>
+                <i class="fas fa-file-image"></i> 
+                <i class="vertical-seperator"></i>
+                Change Profile Image
+            </label>
+
+            <br/>
+
+            <div *ngFor="let item of uploader.queue">
+              <div class="col-sm-12">{{item.file.name}}</div>
+              <div class="progress mb-3" *ngIf="item.progress">
+                <div class="progress-bar progress-bar-striped"
+                [ngStyle]="{'width':item.progress+'%'}" 
+                [ngClass]="{'bg-success':(item.progress===100),'progress-bar-animated':(item.progress<100)}">
+                </div>
+              </div>
+              <button type="button" class="btn btn-primary col-12" (click)="item.upload()">Upload</button>
+            </div>
+          </div>
+          <!--<div class="col-12" *ngIf="uploader?.queue?.length > 0">
+            <button type="button" class="btn btn-primary" (click)="uploader.uploadAll()" >Upload All</button>
+          </div>-->
+
         </div>
         <div class="col-sm-9">
           <h2>{{originalUser.firstName + " " + originalUser.lastName}}</h2>

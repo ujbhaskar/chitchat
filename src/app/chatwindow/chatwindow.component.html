@@ -14,7 +14,6 @@
     </span>
   </div>
   <div #msgWindow class="message-window" [style.height]="msgHeight">
-    <!--<div *ngIf="messageList">MessageList length = {{messageList.length}}</div>-->
     <div class="clear" *ngFor="let message of messageList; index as i; first as isFirst">
       <div class="date-seperator" *ngIf="isFirst || (messageList[i-1] && !compareDate(message.date, messageList[i-1].date))">{{message.date | localdate}}</div>
       <div [ngClass]="{'youTag': (message.sender===user.email),'meTag': message.sender==localUser.email}">
@@ -22,7 +21,6 @@
         <br/>
         <span>
           <small class="grey" [innerHTML]="message.date | localtime"></small>
-          <!--<span>{{message.seen}}</span>-->
           <small>
             <i *ngIf="message.sender===localUser.email" 
             [ngClass]="{'green':message.seen, 'grey':!message.seen}"  
@@ -30,6 +28,13 @@
           </small>
         </span>
       </div>
+    </div>
+    <div class="loadingBlock" *ngIf="loadingChat">
+      <i class="typing">Loading
+        <span class="jump first">.</span>
+        <span class="jump second">.</span>
+        <span class="jump third">.</span>
+      </i>
     </div>
   </div>
   <div class="action-window">

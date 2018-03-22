@@ -27,7 +27,7 @@
       <div *ngIf="!searchCompleted && usersToChat && usersToChat.length && !searchResults.length">
         <div *ngFor="let user of usersToChat">
           <div class="item-user">
-            <span (click)="selectUser(user)">
+            <span (click)="selectUser(user)" class="pointer">
               <i class="fas fa-user-circle" [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}"></i>
               <i class="vertical-seperator"></i>
               {{user.firstName + ' ' + user.lastName}}
@@ -35,9 +35,9 @@
             <span class="right">
               <span *ngIf="user.ping" class="ping">{{user.ping}}</span>
               <i class="vertical-seperator"></i>
-              <i class="far fa-comment" (click)="selectUser(user)"></i>
+              <i class="far fa-comment pointer" (click)="selectUser(user)"></i>
               <i class="vertical-seperator"></i>
-              <i class="fas fa-ban" (click)="banBuddy(user.email)"></i>
+              <i class="fas fa-ban pointer" (click)="banBuddy(user.email)"></i>
             </span>
           </div>
         </div>
@@ -45,10 +45,21 @@
       <div *ngIf="searchResults && searchResults.length">
         <div *ngFor="let user of searchResults">
           <div class="item-user">
-            <i class="fas fa-user-circle" [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}"></i>
-            <i class="vertical-seperator"></i>
-            {{user.firstName + ' ' + user.lastName}} 
-            <span class="right" *ngIf="emailsOfBuddies.indexOf(user.email)==-1"><i class="fas fa-user-plus" (click)="addBuddy(user.email)"></i></span>
+            <span class="pointer" (click)="emailsOfBuddies.indexOf(user.email)>=0 && selectUser(user)">
+              <i class="fas fa-user-circle" [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}"></i>
+              <i class="vertical-seperator"></i>
+              {{user.firstName + ' ' + user.lastName}}
+            </span> 
+            <span class="right pointer" *ngIf="emailsOfBuddies.indexOf(user.email)==-1">
+              <i class="fas fa-user-plus" (click)="addBuddy(user.email)"></i>
+            </span>
+            <span class="right" *ngIf="emailsOfBuddies.indexOf(user.email)>=0">
+              <span *ngIf="user.ping" class="ping">{{user.ping}}</span>
+              <i class="vertical-seperator"></i>
+              <i class="far fa-comment pointer" (click)="selectUser(user)"></i>
+              <i class="vertical-seperator"></i>
+              <i class="fas fa-ban pointer" (click)="banBuddy(user.email)"></i>
+            </span>
           </div>
         </div>
       </div>

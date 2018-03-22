@@ -20,6 +20,8 @@ import { LiveChatService } from './live/live.chat.service';
 import { ChatwindowComponent } from './chatwindow/chatwindow.component';
 import { MessageService } from './chatwindow/message.service';
 
+import { FileSelectDirective } from 'ng2-file-upload';
+
 const appRoutes: Routes = [
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent },
@@ -45,7 +47,8 @@ const appRoutes: Routes = [
     LocalTimePipe,
     UserprofileComponent,
     LiveComponent,
-    ChatwindowComponent
+    ChatwindowComponent,
+    FileSelectDirective
   ],
   imports: [
     BrowserModule,
