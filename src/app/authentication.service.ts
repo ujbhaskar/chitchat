@@ -29,6 +29,7 @@ export class AuthenticationService {
           return Observable.throw(error.json());
       });
   }
+
   signup(user: SignUp){
     const body = JSON.stringify(user);
     return this.http.post(this.url+'user', body, {headers: this.headers})
@@ -39,17 +40,18 @@ export class AuthenticationService {
       });
   }
   
-  getUser(){
-    return this.http.get(this.url+'user/loggedUser?token='+localStorage.getItem('token'), {headers: this.headers})
-      .map((response: Response) =>response.json())
-      .catch((error: Response) => {
-          // this.errorsService.handleError(error.json());
-          this.clearToken();
-          console.log('over here in getUser');
-          this.router.navigateByUrl('/signin');
-          return Observable.throw(error.json());
-      });
+    getUser(){
+        return this.http.get(this.url+'user/loggedUser?token='+localStorage.getItem('token'), {headers: this.headers})
+        .map((response: Response) =>response.json())
+        .catch((error: Response) => {
+            // this.errorsService.handleError(error.json());
+            this.clearToken();
+            console.log('over here in getUser');
+            this.router.navigateByUrl('/signin');
+            return Observable.throw(error.json());
+        });
     }
+
     updateUser(user:any){
         const body = JSON.stringify(user);
         return this.http.post(this.url+'user/updateUser?token='+localStorage.getItem('token'),body, {headers: this.headers})
@@ -82,6 +84,7 @@ export class AuthenticationService {
             });        
         
     }
+
     checkValidLoggedIn(){
         console.log('in checkValidLoggedIn');
         if(localStorage.getItem('token')){
@@ -102,6 +105,20 @@ export class AuthenticationService {
             this.signout();
             this.router.navigateByUrl('/signin');
         }
+    }
+    
+    uploadFile(form:any){
+        console.log(form);
+        return this.http.post(
+            this.url+'user/uploadImage?token='+localStorage.getItem('token'), 
+            form, 
+            {headers: this.headers}
+        )
+        .map((response: Response) => response.json())
+        .catch((error: Response) => {
+            console.log(error);
+            return Observable.throw(error.json());
+        });
     }
 
 }
