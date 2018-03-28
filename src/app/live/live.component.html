@@ -28,7 +28,15 @@
         <div *ngFor="let user of usersToChat">
           <div class="item-user">
             <span (click)="selectUser(user)" class="pointer">
-              <i class="fas fa-user-circle" [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}"></i>
+
+              <i class="fas fa-user-circle" *ngIf="!user || (user && !user.profilePicImage)"
+                  [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}"></i>
+
+              <i *ngIf="user && user.profilePicImage" 
+                [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}">
+                <img class="user-img w-30px border circle"
+                  src="http://localhost:3000/user/image/{{user.profilePicImage}}"/>
+              </i>
               <i class="vertical-seperator"></i>
               {{user.firstName + ' ' + user.lastName}}
             </span>
@@ -46,7 +54,17 @@
         <div *ngFor="let user of searchResults">
           <div class="item-user">
             <span class="pointer" (click)="emailsOfBuddies.indexOf(user.email)>=0 && selectUser(user)">
-              <i class="fas fa-user-circle" [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}"></i>
+              <!--<i class="fas fa-user-circle" [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}"></i>-->
+              
+              <i class="fas fa-user-circle" *ngIf="!user || (user && !user.profilePicImage)"
+                  [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}"></i>
+
+              <i *ngIf="user && user.profilePicImage" 
+                [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}">
+                <img class="user-img w-30px border circle"
+                  src="http://localhost:3000/user/image/{{user.profilePicImage}}"/>
+              </i>
+              
               <i class="vertical-seperator"></i>
               {{user.firstName + ' ' + user.lastName}}
             </span> 

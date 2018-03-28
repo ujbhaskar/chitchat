@@ -1,6 +1,16 @@
 <div *ngIf="user" class="clearMarginMedium" (click)="messageBoxActive()">
   <div class="chat-header-block">
-    <i class="fas fa-user-circle"></i>
+    <!--<i class="fas fa-user-circle"></i>-->
+    
+              <i class="fas fa-user-circle" *ngIf="!user || (user && !user.profilePicImage)"
+                  [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}"></i>
+
+              <i *ngIf="user && user.profilePicImage" 
+                [ngClass]="{'online': user.isOnline=='yes','offline': user.isOnline=='no'}">
+                <img class="user-img w-30px border circle"
+                  src="http://localhost:3000/user/image/{{user.profilePicImage}}"/>
+              </i>
+
     <i class="vertical-seperator"></i>
     <span>{{user.firstName + ' ' + user.lastName}}</span>
     <i class="vertical-seperator"></i>

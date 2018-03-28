@@ -18,6 +18,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
     this.authService.loggedUser.subscribe((user:User)=>{
       this.user = user;
+      console.log('profilepic : ' , this.user);
     });
   }
 

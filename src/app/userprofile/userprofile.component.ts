@@ -30,6 +30,8 @@ export class UserprofileComponent implements OnInit {
     private auth: AuthenticationService
   ) {
     // this.auth.checkValidLoggedIn();
+      // this.uploader.options.autoUpload = true;
+      this.uploader.options.removeAfterUpload = true;
       this.uploader.onAfterAddingFile = (file)=> { file.withCredentials = false; };
       this.uploader.onCompleteItem = (item:any, res:any, status:any, headers:any)=>{        
         this.getUser();
@@ -41,6 +43,8 @@ export class UserprofileComponent implements OnInit {
         // this.attachmentList.push(JSON.parse(res));
         console.log('over here');
         // this.getAllFiles();
+        console.log('after uploading here is the uploader: ' , this.uploader);
+        this.auth.checkValidLoggedIn();
       }
   }
 
@@ -96,7 +100,8 @@ export class UserprofileComponent implements OnInit {
     this.auth.updateUser(this.user).subscribe(
       data=>{
         console.log('updated data ********************** ' , data);
-        this.getUser();
+        this.getUser();        
+        this.auth.checkValidLoggedIn();
       },
       error=>{
         console.error(error);

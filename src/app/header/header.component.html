@@ -3,7 +3,11 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top header-box">
       <a class="navbar-brand" href="javascript:void(0)"><i class="fas fa-comments"></i> Chit Chat</a>
       <button #btnMob class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navb">
-        <i class="fas fa-user-circle"></i>
+        <i *ngIf="!user || (user && !user.profilePicImage)" class="fas fa-user-circle"></i>
+        <!--<i class="fas fa-user-circle"></i>-->
+        <img *ngIf="user && user.profilePicImage" 
+          src="http://localhost:3000/user/image/{{user.profilePicImage}}" 
+          class="user-img w-30px border border-primary circle"/>
       </button>
 
       <div class="collapse navbar-collapse" id="navb">
@@ -11,7 +15,12 @@
           <li class="nav-item" *ngIf="user">
             <a class="nav-link" routerLink="/userprofile" routerLinkActive="active">
               <span  (click)="closeMobileMenu()">
-                <i class="fas fa-user-circle visible-large"></i>{{user.firstName + " " + user.lastName}}
+                <i *ngIf="!user || (user && !user.profilePicImage)" class="fas fa-user-circle visible-large"></i>
+                <img *ngIf="user && user.profilePicImage" 
+                  src="http://localhost:3000/user/image/{{user.profilePicImage}}" 
+                  class="user-img w-30px border border-primary circle"/>
+                
+                {{user.firstName + " " + user.lastName}}
               </span>
               <!--<span class="right" (click)="toggleOnline()">
                 Online <span class="test" round-switch enabled="{{online}}"></span>
