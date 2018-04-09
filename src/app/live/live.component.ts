@@ -31,7 +31,7 @@ export class LiveComponent implements OnInit,OnChanges {
   }
 
   ngOnInit() {
-    // console.log('--------------');
+    console.log('--------------');
     var self = this;
     self.localUser = self.auth.selfUser;
     // console.log('localUser : ' , self.localUser);

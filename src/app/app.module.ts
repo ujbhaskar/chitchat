@@ -19,14 +19,14 @@ import { LiveComponent } from './live/live.component';
 import { LiveChatService } from './live/live.chat.service';
 import { ChatwindowComponent } from './chatwindow/chatwindow.component';
 import { MessageService } from './chatwindow/message.service';
-
+import { AuthguardGuard } from './authguard.guard';
 import { FileSelectDirective } from 'ng2-file-upload';
 
 const appRoutes: Routes = [
   { path: 'signin', component: SigninComponent },
   { path: 'signup', component: SignupComponent },
-  { path: 'userprofile', component: UserprofileComponent },
-  { path: 'live', component: LiveComponent },
+  { path: 'userprofile', canActivate: [AuthguardGuard], component: UserprofileComponent },
+  { path: 'live', canActivate: [AuthguardGuard], component: LiveComponent },
   { path: 'forgotpassword', component: ForgotpasswordComponent },
   { path: '**', component: SigninComponent }
 ];
@@ -59,7 +59,8 @@ const appRoutes: Routes = [
   providers: [
     AuthenticationService,
     LiveChatService,
-    MessageService
+    MessageService,
+    AuthguardGuard
   ],
   bootstrap: [AppComponent]
 })

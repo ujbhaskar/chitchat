@@ -13,8 +13,8 @@ export class AppComponent implements OnInit{
   title = 'app';
   user: User;
   constructor(private router: Router, private authService: AuthenticationService) {
-    // console.log('over here');
-    this.authService.checkValidLoggedIn();
+    console.log('over here in app component');
+    // this.authService.checkValidLoggedIn();
   }
 
   ngOnInit(){
